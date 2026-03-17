@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Poster Generator</title>
+
+  <!-- Cropper CSS -->
+  <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="container">
+  <h2>🎉 Gudi Padwa Poster Generator</h2>
+
+  <input type="text" id="name" placeholder="Partner Name" />
+  <input type="text" id="designation" placeholder="Designation" />
+  <input type="file" id="photo" accept="image/*" />
+
+  <button onclick="generate()">Generate</button>
+
+  <canvas id="canvas" width="1200" height="628"></canvas>
+
+  <a id="download" download="poster.png">Download</a>
+</div>
+
+<!-- 🔥 Crop Modal -->
+<div id="cropModal">
+  <div class="modal-content">
+    <img id="cropImage" />
+    <br>
+    <button onclick="applyCrop()">Crop & Use</button>
+  </div>
+</div>
+
+<!-- Cropper JS -->
+<script src="https://unpkg.com/cropperjs"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
