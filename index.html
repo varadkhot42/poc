@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <​meta charset="UTF-8" />
- <title>Gudi Padwa Poster Generator</title>
-
- <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <title>Poster Generator</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <div class="container">
- <h2>🎉 Gudi Padwa Poster Generator</h2>
+  <h2>🎉 Poster Generator</h2>
 
- <input type="text" id="name" placeholder="Partner Name" />
- <input type="text" id="designation" placeholder="Designation" />
- <input type="file" id="photo" accept="image/*" />
+  <input type="text" id="name" placeholder="Name Surname" />
+  <input type="text" id="designation" placeholder="Designation" />
+  <input type="file" id="photo" accept="image/*" />
 
- <button id="generateBtn">Generate Poster</button>
+  <button onclick="generate()">Generate</button>
 
- <canvas id="canvas" width="1200" height="628"></canvas>
+  <canvas id="canvas" width="1200" height="628"></canvas>
 
- <a id="download" download="poster.png">Download Poster</a>
+  <a id="download" download="poster.png">Download</a>
 </div>
 
-<​script src="script.js"><​/script>
-
+<script src="script.js"></script>
 </body>
 </html>
