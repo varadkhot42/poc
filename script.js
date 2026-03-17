@@ -1,99 +1,87 @@
-let cropper;
-let croppedImage = null;
+let uploadedImage = null;
 
-// 📌 When user uploads image → open crop modal
+// 📌 Handle image upload
 document.getElementById("photo").addEventListener("change", function (e) {
-  const file = e.target.files[0];
-  if (!file) return;
+ const file = e.target.files[0];
+ if (!file) return;
 
-  const reader = new FileReader();
+ const img = new Image();
+ img.src = URL.createObjectURL(file);
 
-  reader.onload = function (event) {
-    const img = document.getElementById("cropImage");
-    img.src = event.target.result;
-
-    document.getElementById("cropModal").style.display = "flex";
-
-    if (cropper) cropper.destroy();
-
-    cropper = new Cropper(img, {
-      aspectRatio: 1,
-      viewMode: 1
-    });
-  };
-
-  reader.readAsDataURL(file);
+ img.onload = function () {
+ uploadedImage = img;
+ };
 });
 
-// 📌 Apply crop
-function applyCrop() {
-  const canvas = cropper.getCroppedCanvas({
-    width: 300,
-    height: 300
-  });
+// 📌 Generate Poster
+document.getElementById("generateBtn").addEventListener("click", function () {
 
-  croppedImage = new Image();
-  croppedImage.src = canvas.toDataURL();
+ const name = document.getElementById("name").value;
+ const designation = document.getElementById("designation").value;
 
-  document.getElementById("cropModal").style.display = "none";
-}
+ if (!uploadedImage) {
+ alert("Please upload an image 😤");
+ return;
+ }
 
-// 📌 Generate final poster
-function generate() {
-  const name = document.getElementById("name").value;
-  const designation = document.getElementById("designation").value;
+ const canvas = document.getElementById("canvas");
+ const ctx = canvas.getContext("2d");
 
-  if (!croppedImage) {
-    alert("Upload & crop image first 😤");
-    return;
-  }
+ const template = new Image();
+ template.src = "./Gemini_Generated_Image_oy8g12oy8g12oy8g.png";
 
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
+ template.onload = function () {
 
-  const template = new Image();
-  template.src = "Gemini_Generated_Image_fsj7epfsj7epfsj7.png";
+ // Draw background
+ ctx.clearRect(0, 0, canvas.width, canvas.height);
+ ctx.drawImage(template, 0, 0, canvas.width, canvas.height);
 
-  template.onload = function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(template, 0, 0, canvas.width, canvas.height);
+ // =========================
+ // 📸 PHOTO (TOP RIGHT)
+ // =========================
+ const photoX = 900;
+ const photoY = 200;
+ const size = 220;
 
-    // =========================
-    // 🖼 PHOTO (RIGHT BOX)
-    // =========================
-    const photoX = 940;
-    const photoY = 285;
-    const photoSize = 190;
+ ctx.save();
+ ctx.beginPath();
+ ctx.arc(photoX + size/2, photoY + size/2, size/2, 0, Math.PI * 2);
+ ctx.clip();
+ ctx.drawImage(uploadedImage, photoX, photoY, size, size);
+ ctx.restore();
 
-    ctx.drawImage(croppedImage, photoX, photoY, photoSize, photoSize);
+ // =========================
+ // 📝 NAME
+ // =========================
+ ctx.textAlign = "center";
 
-    // =========================
-    // 📝 TEXT (CENTER BOX)
-    // =========================
-    ctx.textAlign = "center";
+ let fontSize = 42;
+ ctx.font = `bold ${fontSize}px Arial`;
 
-    // Auto-resize name
-    let fontSize = 40;
-    ctx.font = `bold ${fontSize}px Arial`;
+ while (ctx.measureText(name).width > 300) {
+ fontSize -= 2;
+ ctx.font = `bold ${fontSize}px Arial`;
+ }
 
-    while (ctx.measureText(name).width > 320) {
-      fontSize -= 2;
-      ctx.font = `bold ${fontSize}px Arial`;
-    }
+ ctx.fillStyle = "hashtag#ffffff";
+ ctx.fillText(name, 1010, 470);
 
-    ctx.fillStyle = "#3b2e7e";
-    ctx.fillText(name, 600, 465);
+ // =========================
+ // 📝 DESIGNATION
+ // =========================
+ ctx.font = "26px Arial";
+ ctx.fillStyle = "hashtag#f0d48a";
+ ctx.fillText(designation, 1010, 510);
 
-    // Designation
-    ctx.font = "26px Arial";
-    ctx.fillStyle = "#f5a623";
-    ctx.fillText(designation, 600, 510);
+ // =========================
+ // ⬇️ DOWNLOAD
+ // =========================
+ const link = document.getElementById("download");
+ link.href = canvas.toDataURL("image/png");
+ link.style.display = "block";
+ };
 
-    // =========================
-    // ⬇️ DOWNLOAD
-    // =========================
-    const link = document.getElementById("download");
-    link.href = canvas.toDataURL("image/png");
-    link.style.display = "block";
-  };
-}
+ template.onerror = function () {
+ alert("Template image not found!");
+ };
+});
